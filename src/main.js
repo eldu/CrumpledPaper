@@ -2,10 +2,8 @@
 const THREE = require('three'); // older modules are imported like this. You shouldn't have to worry about this much
 import Framework from './framework'
 import Noise from './noise'
+import Crumple from './crumple'
 import {other} from './noise'
-
-
-var backMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, side: THREE.BackSide});
 
 // called after the scene loads
 function onLoad(framework) {
@@ -32,7 +30,7 @@ function onLoad(framework) {
   // var {scene, camera, renderer, gui, stats} = framework; 
 
   // initialize a simple box and material
-  var p = drawPhoto('https://raw.githubusercontent.com/eldu/CrumpledPaper/master/adam.jpg', scene);
+  var p = Crumple.drawPhoto('https://raw.githubusercontent.com/eldu/CrumpledPaper/master/adam.jpg', scene);
   // scene.add(p);
 
   // set camera position
@@ -46,48 +44,7 @@ function onLoad(framework) {
   });
 }
 
-// Returns 
-function drawPhoto(url, scene) {
-  var texture = new THREE.TextureLoader().load(url, function(tex) {
-    // Callback Image is loaded
 
-    // Define plane
-    var w = texture.image.width / texture.image.height;
-    var h = 1;
-    var plane = new THREE.PlaneGeometry(w, h, 20, 20);
-
-    // Create photo material
-    var frontMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        image: { // Check the Three.JS documentation for the different allowed types and values
-          type: "t", 
-          value: texture
-        }
-      },
-      side: THREE.FrontSide,
-      wireframe: true,
-      vertexShader: require('./shaders/photo-vert.glsl'),
-      fragmentShader: require('./shaders/photo-frag.glsl')
-    });
-
-
-    // TODO: Crumple
-
-    // Create Mesh
-    var photo = THREE.SceneUtils.createMultiMaterialObject(plane, [frontMaterial, backMaterial]);
-    
-    // Add to scene
-    scene.add(photo);
-  });
-}
-
-function randomRange(min, max) { //  Generates a random number in range [min, max]
-  return Math.random() * (max - min) + min;
-}
-
-function randomMax(max) { // Generates random number in range [0, max]
-  return Math.random() * max;
-}
 
 // called on frame updates
 function onUpdate(framework) {
