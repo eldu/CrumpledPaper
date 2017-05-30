@@ -1,9 +1,10 @@
 
 const THREE = require('three'); // older modules are imported like this. You shouldn't have to worry about this much
 import Framework from './framework'
-import Noise from './noise'
 import Crumple from './crumple'
-import {other} from './noise'
+
+const MODELLING = true;
+var redLambert = new THREE.MeshLambertMaterial({color: 0xff0000, wireframe: true});
 
 // called after the scene loads
 function onLoad(framework) {
@@ -25,6 +26,16 @@ function onLoad(framework) {
   hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
   hemiLight.position.set( 0, 500, 0 );
   scene.add( hemiLight );
+
+
+  if (MODELLING) {
+    // Guide Box ----------------------------/
+    // Basically a box with side lengths 1, 2, 3, corresponding to directions x, y, z.
+    // Useful for modelling since I get to understand where all the directions are while I tumble the scene
+    var guideGeo = new THREE.BoxGeometry(1, 2, 3);
+    var guideMesh = new THREE.Mesh(guideGeo, redLambert);
+    scene.add(guideMesh);
+  }
 
   // LOOK: the line below is synyatic sugar for the code above. Optional, but I sort of recommend it.
   // var {scene, camera, renderer, gui, stats} = framework; 
