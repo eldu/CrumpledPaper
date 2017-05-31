@@ -34,20 +34,37 @@ function drawPhoto(url, scene) {
     // Adjust vertices
     console.log (maxw * maxh);
     console.log ('maxw: ' + maxw + ' maxh: ' + maxh);
+
+    var x = 0;
+    var y = 0;
+    var z = 0;
     var offset = new THREE.Vector3(0, 0, 0);
-    for (var i = 1; i < maxh - 1; i++) { // Row
+    for (var i = 0; i < maxh; i++) { // Row
     	// First 
     	//j = 0
 
     	// Middle
-    	for (var j = 1; j < maxw - 1; j++) { // Column
-    		offset.set(Toolbox.randomRange(-halfcellsize, halfcellsize), Toolbox.randomRange(-halfcellsize, halfcellsize), 0);
+    	for (var j = 0; j < maxw; j++) { // Column
     		var idx = getIdx(i, j, maxw, maxh);
 
-    		console.log(idx);
+    		// Offset vertices along the plane
+    		offset.set(Toolbox.randomRange(-halfcellsize, halfcellsize), Toolbox.randomRange(-halfcellsize, halfcellsize), 0);
     		plane.vertices[idx].add(offset);
+
+    		x = plane.vertices[idx].x;
+    		y = plane.vertices[idx].y;
+
+    		// z
+    		z = Math.cos(x*y*20) * 0.2;
+    		offset.set(0, 0, z);
+    		plane.vertices[idx].add(offset);
+
+    		// Fold the vertices
+
+    		// Set
+
+
     	}
-    	console.log('next row');
 
     	// Last
     	// j = maxh - 1
