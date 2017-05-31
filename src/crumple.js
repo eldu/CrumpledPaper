@@ -1,7 +1,7 @@
 const THREE = require('three')
 import Toolbox from './toolbox'
 
-var backMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, side: THREE.BackSide});
+var backMaterial = new THREE.MeshLambertMaterial({color: 0xffffff , side: THREE.BackSide});
 var granularity = 20;
 
 function drawPhoto(url, scene) {
@@ -15,6 +15,7 @@ function drawPhoto(url, scene) {
     var maxh = granularity; // Cells in height
     var halfcellsize = (h / maxh) / 3;
     var plane = new THREE.PlaneGeometry(w, h, maxw - 1, maxh - 1);
+    // var plane = new THREE.BoxGeometry(w, h, 1, maxw - 1, maxh - 1, 1);
 
     // Create photo material
     var frontMaterial = new THREE.ShaderMaterial({
@@ -25,7 +26,7 @@ function drawPhoto(url, scene) {
         }
       },
       side: THREE.FrontSide,
-      wireframe: true,
+      // wireframe: true,
       vertexShader: require('./shaders/photo-vert.glsl'),
       fragmentShader: require('./shaders/photo-frag.glsl')
     });
@@ -58,22 +59,14 @@ function drawPhoto(url, scene) {
     		z = Math.cos(x*y*20) * 0.2;
     		offset.set(0, 0, z);
     		plane.vertices[idx].add(offset);
-
-    		// Fold the vertices
-
-    		// Set
-
-
     	}
-
-    	// Last
-    	// j = maxh - 1
-
-
     }
 
     // Create Mesh
+    //var photo = new THREE.Mesh(plane, [frontMaterial, backMaterial, backMaterial, backMaterial, backMaterial,  backMaterial]);
     var photo = THREE.SceneUtils.createMultiMaterialObject(plane, [frontMaterial, backMaterial]);
+    photo.castShadow = true;
+    photo.receiveShadow = true;
     
     // Add to scene
     scene.add(photo);
