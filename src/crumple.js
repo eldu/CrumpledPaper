@@ -1,7 +1,10 @@
 const THREE = require('three')
 import Toolbox from './toolbox'
 
-var backMaterial = new THREE.MeshLambertMaterial({color: 0xffffff , side: THREE.BackSide});
+
+
+// https://stackoverflow.com/questions/10742149/how-to-create-directional-light-shadow-in-three-js
+var backMaterial = new THREE.MeshLambertMaterial({color: 0xaaaaaa, side: THREE.BackSide});
 var granularity = 20;
 
 function drawPhoto(url, scene) {
@@ -15,7 +18,7 @@ function drawPhoto(url, scene) {
     var maxh = granularity; // Cells in height
     var halfcellsize = (h / maxh) / 3;
     var plane = new THREE.PlaneGeometry(w, h, maxw - 1, maxh - 1);
-    // var plane = new THREE.BoxGeometry(w, h, 1, maxw - 1, maxh - 1, 1);
+    //var plane = new THREE.BoxGeometry(w, h, 1, maxw - 1, maxh - 1, 1);
 
     // Create photo material
     var frontMaterial = new THREE.ShaderMaterial({
@@ -33,8 +36,6 @@ function drawPhoto(url, scene) {
 
     // TODO: Crumple
     // Adjust vertices
-    console.log (maxw * maxh);
-    console.log ('maxw: ' + maxw + ' maxh: ' + maxh);
 
     var x = 0;
     var y = 0;
@@ -63,10 +64,13 @@ function drawPhoto(url, scene) {
     }
 
     // Create Mesh
-    //var photo = new THREE.Mesh(plane, [frontMaterial, backMaterial, backMaterial, backMaterial, backMaterial,  backMaterial]);
+    var materials = [frontMaterial, backMaterial, backMaterial, backMaterial, backMaterial,  backMaterial];
+    //var photo = new THREE.Mesh(plane, new THREE.MeshFaceMaterial(materials));
     var photo = THREE.SceneUtils.createMultiMaterialObject(plane, [frontMaterial, backMaterial]);
     photo.castShadow = true;
     photo.receiveShadow = true;
+
+    photo.rotateX(-Math.PI / 4.0);
     
     // Add to scene
     scene.add(photo);
